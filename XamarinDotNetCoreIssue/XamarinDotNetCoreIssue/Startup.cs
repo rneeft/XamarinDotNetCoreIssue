@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using Microsoft.Extensions.Configuration;
@@ -12,23 +13,46 @@ namespace XamarinDotNetCoreIssue
 {
     public static class Startup
     {
+        private static void ExtractSaveResource(string filename, string location)
+        {
+            var a = Assembly.GetExecutingAssembly();
+            using (var resFilestream = a.GetManifestResourceStream(filename))
+            {
+                if (resFilestream != null)
+                {
+                    var full = Path.Combine(location, filename);
+
+                    using (var stream = File.Create(full))
+                    {
+                        resFilestream.CopyTo(stream);
+                    }
+                }
+            }
+        }
+
         public static IServiceProvider ServiceProvider { get; set; }
         public static void Init()
         {
-            var a = Assembly.GetExecutingAssembly();
-            using var stream = a.GetManifestResourceStream("XamarinDotNetCoreIssue.appsettings.json");
+            // var a = Assembly.GetExecutingAssembly();
+            //using var stream = a.GetManifestResourceStream("XamarinDotNetCoreIssue.appsettings.json");
+
+            var systemDir = FileSystem.CacheDirectory;
+            ExtractSaveResource("XamarinDotNetCoreIssue.appsettings.json", FileSystem.CacheDirectory);
+            var fullConfig = Path.Combine(systemDir, "XamarinDotNetCoreIssue.appsettings.json");
 
             var host = new HostBuilder()
-                        .ConfigureHostConfiguration(c =>
-                        {
-                // Tell the host configuration where to file the file (this is required for Xamarin apps)
-                c.AddCommandLine(new string[] { $"ContentRoot={FileSystem.AppDataDirectory}" });
+                .ConfigureHostConfiguration(c =>
+                {
+                    //// Tell the host configuration where to file the file (this is required for Xamarin apps)
+                    //c.AddCommandLine(new string[] { $"ContentRoot={FileSystem.AppDataDirectory}" });
+                    ////read in the configuration file!
+                    //c.AddJsonStream(stream);
 
-                //read in the configuration file!
-                c.AddJsonStream(stream);
-                        })
-                        .ConfigureServices((c, x) =>
-                        {
+                    c.AddCommandLine(new string[] { $"ContentRoot={FileSystem.AppDataDirectory}" });
+                    c.AddJsonFile(fullConfig);
+                })
+                .ConfigureServices((c, x) =>
+                {
                 // Configure our local services and access the host configuration
                 ConfigureServices(c, x);
                         })
@@ -37,7 +61,7 @@ namespace XamarinDotNetCoreIssue
                             //setup a console logger and disable colors since they don't have any colors in VS
                             o.DisableColors = true;
                         }))
-                        .Build();
+                .Build();
 
             //Save our service provider so we can use it later.
             ServiceProvider = host.Services;
