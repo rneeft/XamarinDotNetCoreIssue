@@ -31,7 +31,8 @@ namespace XamarinDotNetCoreIssue
         }
 
         public static IServiceProvider ServiceProvider { get; set; }
-        public static void Init()
+
+        public static void Init(Action<HostBuilderContext, IServiceCollection> nativeConfigureServices)
         {
             // var a = Assembly.GetExecutingAssembly();
             //using var stream = a.GetManifestResourceStream("XamarinDotNetCoreIssue.appsettings.json");
