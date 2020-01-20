@@ -25,6 +25,6 @@ The code is included in this GitHub repository.
 The (YAML) build is trigged to run with every push to master. 
 
 ## Issue tracking
-https://github.com/dotnet/extensions/issues/1631#issuecomment-567197117
+https://github.com/dotnet/extensions/issues/1631
 
 Please feel free to Fork the repro to poke around. 
