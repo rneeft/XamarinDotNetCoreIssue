@@ -20,8 +20,15 @@ steps:
       restoreDirectory: '../Packages'
       
   - task: VSBuild@1
-    displayName: 'Build solution'
+    displayName: 'Build solution without Android'
     inputs:
-      solution: '**/*.sln'
+      solution: 'XamarinDotNetCoreIssue.sln'
+      platform: 'any cpu'
+      configuration: 'release'
+
+        - task: VSBuild@1
+    displayName: 'Build solution including Android'
+    inputs:
+      solution: 'XamarinDotNetCoreIssueAndroid.sln'
       platform: 'any cpu'
       configuration: 'release'
