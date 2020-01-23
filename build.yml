@@ -30,5 +30,6 @@ steps:
     displayName: 'Build solution including Android'
     inputs:
       solution: 'XamarinDotNetCoreIssueAndroid.sln'
+      msbuildArgs: '/restore /p:RestorePackagesPath=packages'
       platform: 'any cpu'
       configuration: 'release'
