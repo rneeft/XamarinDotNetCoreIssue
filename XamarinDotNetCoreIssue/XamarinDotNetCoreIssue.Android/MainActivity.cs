@@ -16,6 +16,8 @@ namespace XamarinDotNetCoreIssue.Droid
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            var x = System.Diagnostics.EventLog.Exists("logname");
+
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
