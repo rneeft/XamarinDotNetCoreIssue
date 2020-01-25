@@ -8,15 +8,24 @@ using Android.Widget;
 using Android.OS;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
 namespace XamarinDotNetCoreIssue.Droid
 {
+    public class MyClass : IAsyncDisposable
+    {
+        public ValueTask DisposeAsync()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     [Activity(Label = "XamarinDotNetCoreIssue", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            var x = System.Diagnostics.EventLog.Exists("logname");
+            var newClass = new MyClass();
 
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
